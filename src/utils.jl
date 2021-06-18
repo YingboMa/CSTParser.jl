@@ -62,7 +62,7 @@ macro closer(ps, opt, body)
     end
 end
 
-"""
+    """
     @nocloser ps rule body
 
 Continues parsing not closing on `rule`.
@@ -120,7 +120,7 @@ macro precedence(ps, prec, body)
         $(esc(ps)).closer.precedence = tmp1
         out
     end
-end
+    end
 
 
 # Closer_TMP and ancillary functions help reduce code generation
@@ -218,7 +218,7 @@ Determine whether a parsing error occured while processing text with the given
 function has_error(x::EXPR)
     return headof(x) == :errortoken || (x.args !== nothing && any(has_error, x.args)) || (x.trivia !== nothing && any(has_error, x.trivia))
 end
-has_error(ps::ParseState) = ps.errored
+        has_error(ps::ParseState) = ps.errored
 
 using Base.Meta
 
@@ -262,7 +262,7 @@ function norm_ast(a::Any)
     return a
 end
 
-function flisp_parsefile(str, display = true)
+function flisp_parsefile(str, display=true)
     pos = 1
     x1 = Expr(:file)
     try
@@ -320,7 +320,7 @@ function check_file(file, ret, neq)
         printstyled(file, color=:green)
         println()
         c0, c1 = compare(x0, x1)
-        printstyled(string("    ", c0), bold = true, color = :light_red)
+        printstyled(string("    ", c0), bold=true, color=:light_red)
         println()
         printstyled(string("    ", c1), bold=true, color=:light_green)
         println()
@@ -448,7 +448,7 @@ function find_arg_at(x::CSTParser.EXPR, i)
     offset = 0
     for (cnt, a) in enumerate(x.args)
         if i <= offset + a.fullspan
-            return cnt
+return cnt
         end
         offset += a.fullspan
     end
@@ -465,7 +465,7 @@ function comp(x::CSTParser.EXPR, y::CSTParser.EXPR)
     all(comp(x[i], y[i]) for i = 1:length(x))
 end
 
-function minimal_reparse(s0, s1, x0 = CSTParser.parse(s0, true), x1 = CSTParser.parse(s1, true); inds = false)
+function minimal_reparse(s0, s1, x0=CSTParser.parse(s0, true), x1=CSTParser.parse(s1, true); inds=false)
     if sizeof(s0) !== x0.fullspan
        error("minimal reparse - input text length doesn't match the full span of the provided CST.")
         # return inds ? (1:0, 1:length(x1.args), 1:0) : x1
@@ -487,7 +487,7 @@ function minimal_reparse(s0, s1, x0 = CSTParser.parse(s0, true), x1 = CSTParser.
     r1 = 1:min(find_arg_at(x0, i0) - 1, length(x0.args), find_arg_at(x1, i0) - 1)
     for i = 1:min(find_arg_at(x0, i0) - 1, find_arg_at(x1, i0) - 1)
         if x0.args[i].fullspan !== x1.args[i].fullspan
-            r1 = 1:(i-1)
+            r1 = 1:(i - 1)
             break
         end
         r1 = 1:i
@@ -505,7 +505,7 @@ function minimal_reparse(s0, s1, x0 = CSTParser.parse(s0, true), x1 = CSTParser.
         if !quick_comp(x0.args[end - i], x1.args[end - i]) ||
             offset <= i1 ||
             length(x0.args) - i == last(r1) + 1 ||
-            offset - x1.args[end-i].fullspan <= i2 <= offset
+            offset - x1.args[end - i].fullspan <= i2 <= offset
 
             r2 = first(r2):length(x1.args) - i
             r3 = length(x0.args) .+ ((-i + 1):0)
@@ -541,7 +541,7 @@ check_span(x, neq = [])
 Recursively checks whether the span of an expression equals the sum of the span
 of its components. Returns a vector of failing expressions.
 """
-function check_span(x::EXPR, neq = [])
+            function check_span(x::EXPR, neq=[])
     (ispunctuation(x) || isidentifier(x) || iskeyword(x) || isoperator(x) || isliteral(x) || headof(x) == :string) && return neq
 
     s = 0
@@ -558,7 +558,7 @@ function check_span(x::EXPR, neq = [])
         end
     end
     if x.head isa EXPR
-        s += x.head.fullspan
+s += x.head.fullspan
     end
     if length(x) > 0 && s != x.fullspan
         push!(neq, x)
@@ -581,7 +581,7 @@ Attempt to get a string representation of a nodeless expression.
 """
 function str_value(x)
     if headof(x) === :IDENTIFIER || isliteral(x)
-        return valof(x)
+            return valof(x)
     elseif isidentifier(x)
         valof(x.args[2])
     elseif isoperator(x)
@@ -673,7 +673,7 @@ function valid_escaped_seq(s::AbstractString)
             while !isempty(a)
                 nc = popfirst!(a)
                 n = ('0' <= c <= '7') ? n << 3 + nc - '0' : return false
-            end
+end
             return n < 128
         else
             @static if VERSION < v"1.1.0"
